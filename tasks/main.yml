@@ -1,21 +1,27 @@
 ---
 
 - name: "{{ timezone_task_prefix }} configure /etc/timezone"
-  copy:
+  ansible.builtin.copy:
     dest: "/etc/timezone"
     content: |
       {{ timezone_tz }}
+    mode: 0644
+    owner: root
+    group: root
   when: ansible_os_family == "Debian"
 
 - name: "{{ timezone_task_prefix }} configure /etc/sysconfig/clock"
-  copy:
+  ansible.builtin.copy:
     dest: "/etc/sysconfig/clock"
     content: |
       ZONE="{{ timezone_tz }}"
+    mode: 0644
+    owner: root
+    group: root
   when: ansible_os_family == "RedHat"
 
 - name: "{{ timezone_task_prefix }} configure /etc/localtime"
-  file:
+  ansible.builtin.file:
     src: "/usr/share/zoneinfo/{{ timezone_tz }}"
     dest: "/etc/localtime"
     state: link
